@@ -22,21 +22,15 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get()
-  @ApiOperation({ deprecated: true })
-  findAll() {
-    return this.usersService.findAll();
-  }
-
   @Version('2')
-  @Get()
-  findAllV2() {
-    return this.usersService.findAll();
+  @Get(':email')
+  findByEmail(@Param('id') email:string) {
+    return this.usersService.findByEmail(email);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.usersService.findOne(id);
+  findById(@Param('id') id: number) {
+    return this.usersService.findById(id);
   }
 
   @Patch(':id')
@@ -44,8 +38,4 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.usersService.remove(id);
-  }
 }
