@@ -6,11 +6,13 @@ import { ConfigService } from '@nestjs/config'; // Change import source
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableVersioning({
 		type: VersioningType.URI,
 		prefix: 'v',
 		defaultVersion: '1',
 	});
+
   // Swagger Implementation
   const config = new DocumentBuilder()
     .setTitle('Local SEO Optimiza API')
@@ -36,7 +38,7 @@ async function bootstrap() {
 
   await app.listen(configService.get('PORT') || 3000);
 
-  console.log('DB_USERNAME:', configService.get('DB_USERNAME')); // Access via configService
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
+
 bootstrap();
