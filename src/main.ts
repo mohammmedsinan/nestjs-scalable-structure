@@ -8,10 +8,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableVersioning({
-		type: VersioningType.URI,
-		prefix: 'v',
-		defaultVersion: '1',
-	});
+    type: VersioningType.URI,
+    prefix: 'v',
+    defaultVersion: '1',
+  });
 
   // Swagger Implementation
   const config = new DocumentBuilder()
