@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "paths": {
-      "@common/*": ["src/common/*"]
+      "@common/*": ["src/common/*"],
+      "@client/*": ["src/modules/client/*"]
     },
     "module": "commonjs",
     "declaration": true,

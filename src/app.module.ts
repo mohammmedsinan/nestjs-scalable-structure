@@ -10,7 +10,6 @@ import { CommonModule } from './common/common.module';
 
 // Import Client Modules
 import { AuthModule } from './modules/client/auth/auth.module';
-import { UsersService } from './modules/client/users/users.service';
 import { UsersModule } from './modules/client/users/users.module';
 
 // Import configuration files
@@ -23,7 +22,8 @@ import authConfig from './config/auth.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, databaseConfig, authConfig],
-      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
+      //envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
+      envFilePath: `.env`,
     }),
 
 	// Database Modules
@@ -35,8 +35,7 @@ import authConfig from './config/auth.config';
 	// Client Modules
     AuthModule,
     UsersModule,
-  ],
-  providers: [UsersService],
+  ]
 })
 
 export class AppModule {}

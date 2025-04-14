@@ -14,7 +14,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     console.log(payload);
-
     const unix_date = Math.floor(+new Date() / 1000); // Get the current Unix timestamp
     if (payload.exp < unix_date) {
       // FIX : fix the issue where you should automatically refresh the token, check from the database if the token is valid or not
