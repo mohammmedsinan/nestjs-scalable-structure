@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard, LocalAuthGuard } from '@common/guards';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { GoogleAuthGuard, JwtAuthGuard, LocalAuthGuard } from '@common/guards';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from '@client/users/dtos/create.user.dto';
+import type { ValidateUserResponse } from './types/auth.type';
+// import { CreateUserDto } from '@client/users/dtos/create.user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -14,9 +23,23 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req: any) {
-    return this.authService.login(req.user);
+  async login(@Request() request: { user: ValidateUserResponse }) {
+    return await this.authService.login(request.user);
   }
+
+  @UseGuards(GoogleAuthGuard)
+  @Get('/google')
+  async google() {
+    // Google Auth Guard is handling the request
+    return true;
+  }
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  async googleAuthRedirect(@Request() req, @Res() res) {
+    res.json({ Message: 'Success' });
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
   getProfile(@Request() req: any) {

@@ -13,5 +13,5 @@ export default registerAs('database', () => ({
   // Or if you prefer to specify exact paths:
   // entities: ['dist/client/users/users.entity{.ts,.js}'],
   synchronize: process.env.DB_SYNCHRONIZE === 'true',
-  logging: process.env.DB_LOGGING === 'true'
+  logging: process.env.DB_LOGGING === 'true',
 }));
