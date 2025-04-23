@@ -6,6 +6,7 @@ import {
   MaxLength,
   IsOptional,
   IsNumber,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -14,6 +15,16 @@ export class CreateUserDto {
   @MinLength(3)
   @MaxLength(20)
   username: string;
+
+  @IsString()
+  @MinLength(3)
+  @MaxLength(20)
+  first_name?: string;
+
+  @IsString()
+  @MinLength(3)
+  @MaxLength(20)
+  last_name?: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -27,8 +38,27 @@ export class CreateUserDto {
   @IsOptional()
   password: string;
 
-
   @IsNumber()
   @IsOptional()
   code?: number;
+
+  @IsString()
+  @IsOptional()
+  image?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  is_verified?: boolean;
+
+  @IsString()
+  @IsOptional()
+  provider_type?: 'google' | 'local';
+
+  @IsString()
+  @IsOptional()
+  provider_id?: string;
+
+  @IsNumber()
+  @IsOptional()
+  language?: number;
 }

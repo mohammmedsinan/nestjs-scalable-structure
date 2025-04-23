@@ -60,14 +60,9 @@ export class AuthService {
       });
 
       // Create refresh token for user
-      const payload = { username: result.username, sub: result.id };
-      const jwtOptions = {
-        expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRE'),
-      };
-      //const token = await this.jwtService.signAsync(payload);
-      const refresh_token = await this.jwtService.signAsync(
-        payload,
-        jwtOptions,
+      const refresh_token = await this.signRefreshToken(
+        result,
+        this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRE') || '30d',
       );
       // Update user in database with refresh token
       await this.usersService.updateUser(result.id, { refresh_token });
@@ -78,20 +73,45 @@ export class AuthService {
   }
 
   async validateOrCreateUser(googleUser: any) {
+    const { first_name, email, picture, provider_id } = googleUser;
     let user = await this.usersService.findOneByEmail(googleUser.email);
     if (!user) {
       user = await this.usersService.createUser({
-        email: googleUser.email,
+        email: email,
         password: '',
-        username: googleUser.first_name + googleUser.last_name,
-        code: 1111
+        username: first_name.givenName + first_name.familyName,
+        image: picture,
+        code: 1111,
+        first_name: first_name.givenName,
+        last_name: first_name.familyName,
+        is_verified: true,
+        provider_type: 'google',
+        provider_id: provider_id,
+        language: 1,
       });
+      const refresh_token = await this.signRefreshToken(
+        user,
+        this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRE') || '30d',
+      );
+      await this.usersService.updateUser(user.id, { refresh_token });
     } else if (!user.provider_id) {
       user = await this.usersService.updateUser(user.id, {
-        google_id: googleUser.googleId,
+        provider_id: provider_id,
       });
     }
 
     return this.login(user);
+  }
+
+  async signRefreshToken(
+    payload: { username: string; id: number },
+    expiresIn: string,
+  ) {
+    let payloads = { username: payload.username, sub: payload.id };
+    let jwtOptions = {
+      expiresIn,
+    };
+    const refresh_token = await this.jwtService.signAsync(payloads, jwtOptions);
+    return refresh_token;
   }
 }

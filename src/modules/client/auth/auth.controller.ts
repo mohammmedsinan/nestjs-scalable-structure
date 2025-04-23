@@ -37,7 +37,7 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(@Request() req, @Res() res) {
-    res.json({ Message: 'Success' });
+    await res.json(req.user);
   }
 
   @UseGuards(JwtAuthGuard)

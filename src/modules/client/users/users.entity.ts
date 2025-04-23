@@ -35,10 +35,10 @@ export default class Users extends BaseEntity {
   refresh_token?: string;
 
   @Column({ nullable: true })
-  provider_id?: number;
+  provider_id?: string;
 
-  @Column({ nullable: true })
-  provider_type?: number;
+  @Column({ type: 'enum', enum: ['google', 'local'], default: 'local' })
+  provider_type: 'google' | 'local';
 
   @Column({ default: true })
   is_active: boolean;

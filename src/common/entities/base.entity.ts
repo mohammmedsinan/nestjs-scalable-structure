@@ -1,12 +1,37 @@
-import { PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Column,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
 
 export class BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)',precision: 6 })
-  createdAt: Date;
+  @Column({
+    type: 'bigint',
+    nullable: false,
+  })
+  createdAt: number;
 
-  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)', precision: 6})
-  updatedAt: Date;
+  @Column({
+    type: 'bigint',
+    nullable: false,
+  })
+  updatedAt: number;
+
+  @BeforeInsert()
+  setCreatedAndUpdatedAt() {
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    this.createdAt = currentTimestamp;
+    this.updatedAt = currentTimestamp;
+  }
+
+  @BeforeUpdate()
+  setUpdatedAt() {
+    this.updatedAt = Math.floor(Date.now() / 1000);
+  }
 }

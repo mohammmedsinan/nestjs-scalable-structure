@@ -7,8 +7,8 @@ export type SignUpResponse = {
   code: number;
   language?: number;
   country?: number;
-  provider_id?: number;
-  provider_type?: number;
+  provider_id?: string;
+  provider_type: 'google' | 'local';
   is_active: boolean;
   is_verified: boolean;
   is_enabled: boolean;
@@ -25,8 +25,8 @@ export type ValidateUserResponse = {
   code: number;
   language?: number;
   country?: number;
-  provider_id?: number;
-  provider_type?: number;
+  provider_id?: string;
+  provider_type: 'google' | 'local';
   access_token?: string;
   is_active: boolean;
   is_verified: boolean;
