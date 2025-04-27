@@ -16,6 +16,7 @@ export default class GoogleBusinessService {
       });
 
       // List the user's locations (business accounts)
+      // This will return a list of locations associated with the user's account
       const response = await businessProfile.accounts.locations.list();
 
       // If there are accounts, the user has a GMB profile
