@@ -38,6 +38,13 @@ export class CreateUserDto {
   @IsOptional()
   password: string;
 
+  @IsString()
+  @IsOptional()
+  @MinLength(6)
+  @MaxLength(20)
+  @IsOptional()
+  refresh_token?: string;
+
   @IsNumber()
   @IsOptional()
   code?: number;

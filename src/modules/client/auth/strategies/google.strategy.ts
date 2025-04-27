@@ -16,7 +16,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         '808833697851-0qugmedqn8clrna8crspfjspr2ean279.apps.googleusercontent.com',
       clientSecret: '4vYt7vqby8k9UOHmVzTfotYg',
       callbackURL: 'http://localhost:3000/api/v1/auth/google/callback',
-      scope: ['email', 'profile'],
+      scope: [
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/business.manage',
+      ],
     });
   }
 

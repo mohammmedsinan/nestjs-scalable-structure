@@ -28,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     const currentUnixTime = Math.floor(Date.now() / 1000);
 
     // Check token expiration
-    if (payload.exp < currentUnixTime) {
+    if (payload.exp > currentUnixTime) {
       try {
         const { refresh_token } = await this.userService.findUserRefreshToken(
           payload.username,
@@ -37,7 +37,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         // Verify refresh token is not expired
         if (!refresh_token) return false;
         const refreshTokenPayload = this.jwtService.decode(refresh_token);
-        if (!refreshTokenPayload || refreshTokenPayload.exp < currentUnixTime) {
+        if (!refreshTokenPayload || refreshTokenPayload.exp > currentUnixTime) {
           throw new UnauthorizedException(
             'Both access and refresh tokens expired',
           );
@@ -59,7 +59,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
           token: newAccessToken,
         };
       } catch (error) {
-        throw new UnauthorizedException('Token refresh failed');
+        throw new UnauthorizedException({message: error.message});
       }
     }
 

@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 // User Imports
 import { UsersService } from '../users/users.service';
+import GoogleBusinessService from './helpers/check-for-business-account';
 
 // Auth types
 import type { CreateUserDto } from '../users/dtos/create.user.dto';
@@ -21,6 +22,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly googleBusinessService: GoogleBusinessService,
   ) {}
 
   async validateUser(
@@ -30,10 +32,7 @@ export class AuthService {
     const user = await this.usersService.findOne(username);
     const decodedPassword = await bcrypt.compare(pass, user.password);
     if (!decodedPassword)
-      throw new HttpException(
-        'Invalid Passowrd is Wrong',
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new HttpException('Passowrd is Wrong', HttpStatus.UNAUTHORIZED);
     if (!user) return null;
     const { password, refresh_token, ...result } = user;
     return result;
@@ -57,6 +56,7 @@ export class AuthService {
       const { password, ...result } = await this.usersService.createUser({
         ...user,
         password: password_hash,
+        provider_type: 'local',
       });
 
       // Create refresh token for user
@@ -77,7 +77,7 @@ export class AuthService {
     let user = await this.usersService.findOneByEmail(googleUser.email);
     if (!user) {
       user = await this.usersService.createUser({
-        email: email,
+        email,
         password: '',
         username: first_name.givenName + first_name.familyName,
         image: picture,
@@ -86,7 +86,7 @@ export class AuthService {
         last_name: first_name.familyName,
         is_verified: true,
         provider_type: 'google',
-        provider_id: provider_id,
+        provider_id,
         language: 1,
       });
       const refresh_token = await this.signRefreshToken(
